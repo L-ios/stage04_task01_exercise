@@ -1,0 +1,68 @@
+version: "3.9"
+
+services:
+  mysql-57-master:
+    image: mysql/mysql-server:5.7
+    restart: always
+    hostname: mysql-57-master
+    container_name: mysql-57-master
+    ports:
+      - 13570:3306
+    environment:
+      # 修改时区为机器本地时区
+      TZ: Asia/Shanghai
+      LANG: en_US.UTF-8
+      MYSQL_ROOT_PASSWORD: MyNewPass4!
+    volumes:
+      # 修改时区为机器本地时区
+      - /etc/localtime:/etc/localtime:ro
+      - ./master/my.cnf:/etc/my.cnf
+      - ./master/my.cnf.d:/etc/my.cnf.d
+      - ./master/data:/var/lib/mysql
+    networks:
+      - default
+  mysql-57-slave1:
+    image: mysql/mysql-server:5.7
+    restart: always
+    hostname: mysql-57-slave1
+    container_name: mysql-57-slave1
+    ports:
+      - 13571:3306
+    environment:
+      # 修改时区为机器本地时区
+      TZ: Asia/Shanghai
+      LANG: en_US.UTF-8
+      MYSQL_ROOT_PASSWORD: MyNewPass4!
+    volumes:
+      # 修改时区为机器本地时区
+      - /etc/localtime:/etc/localtime:ro
+      - ./slave1/my.cnf:/etc/my.cnf
+      - ./slave1/my.cnf.d:/etc/my.cnf.d
+      - ./slave1/data:/var/lib/mysql
+    networks:
+      - default
+  mysql-57-slave2:
+    image: mysql/mysql-server:5.7
+    restart: always
+    hostname: mysql-57-slave2
+    container_name: mysql-57-slave2
+    ports:
+      - 13572:3306
+    environment:
+      # 修改时区为机器本地时区
+      TZ: Asia/Shanghai
+      LANG: en_US.UTF-8
+      MYSQL_ROOT_PASSWORD: MyNewPass4!
+    volumes:
+      # 修改时区为机器本地时区
+      - /etc/localtime:/etc/localtime:ro
+      - ./slave2/my.cnf:/etc/my.cnf
+      - ./slave2/my.cnf.d:/etc/my.cnf.d
+      - ./slave2/data:/var/lib/mysql
+    networks:
+      - default
+
+networks:
+  default:
+    external:
+      name: test
