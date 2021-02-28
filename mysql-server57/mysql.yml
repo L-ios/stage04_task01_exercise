@@ -11,13 +11,14 @@ services:
     environment:
       # 修改时区为机器本地时区
       TZ: Asia/Shanghai
-      LANG: en_US.UTF-8
-      MYSQL_ROOT_PASSWORD: MyNewPass4!
+      LANG: zh_CN.UTF-8
+      MYSQL_ROOT_PASSWORD: MyMaster
     volumes:
       # 修改时区为机器本地时区
-      - /etc/localtime:/etc/localtime:ro
-      - ./master/my.cnf:/etc/my.cnf
-      - ./master/my.cnf.d:/etc/my.cnf.d
+      - /usr/share/zoneinfo/Asia/Shanghai:/etc/localtime:ro
+      - ./master/my.cnf:/etc/my.cnf:ro
+      - ./master/my.cnf.d:/etc/my.cnf.d:ro
+      # - ./master/initdb.d:/docker-entrypoint-initdb.d:ro
       - ./master/data:/var/lib/mysql
     networks:
       - default
@@ -31,13 +32,14 @@ services:
     environment:
       # 修改时区为机器本地时区
       TZ: Asia/Shanghai
-      LANG: en_US.UTF-8
-      MYSQL_ROOT_PASSWORD: MyNewPass4!
+      LANG: zh_CN.UTF-8
+      MYSQL_ROOT_PASSWORD: MySlave1
     volumes:
       # 修改时区为机器本地时区
-      - /etc/localtime:/etc/localtime:ro
-      - ./slave1/my.cnf:/etc/my.cnf
-      - ./slave1/my.cnf.d:/etc/my.cnf.d
+      - /usr/share/zoneinfo/Asia/Shanghai:/etc/localtime:ro
+      - ./slave1/my.cnf:/etc/my.cnf:ro
+      - ./slave1/my.cnf.d:/etc/my.cnf.d:ro
+      # - ./slave1/initdb.d:/docker-entrypoint-initdb.d:ro
       - ./slave1/data:/var/lib/mysql
     networks:
       - default
@@ -51,13 +53,14 @@ services:
     environment:
       # 修改时区为机器本地时区
       TZ: Asia/Shanghai
-      LANG: en_US.UTF-8
-      MYSQL_ROOT_PASSWORD: MyNewPass4!
+      LANG: zh_CN.UTF-8
+      MYSQL_ROOT_PASSWORD: MySlave1
     volumes:
       # 修改时区为机器本地时区
-      - /etc/localtime:/etc/localtime:ro
-      - ./slave2/my.cnf:/etc/my.cnf
-      - ./slave2/my.cnf.d:/etc/my.cnf.d
+      - /usr/share/zoneinfo/Asia/Shanghai:/etc/localtime:ro
+      - ./slave2/my.cnf:/etc/my.cnf:ro
+      - ./slave2/my.cnf.d:/etc/my.cnf.d:ro
+      # - ./slave2/initdb.d:/docker-entrypoint-initdb.d:ro
       - ./slave2/data:/var/lib/mysql
     networks:
       - default
