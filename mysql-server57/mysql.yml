@@ -13,13 +13,14 @@ services:
       TZ: Asia/Shanghai
       LANG: zh_CN.UTF-8
       MYSQL_ROOT_PASSWORD: MyMaster
+      MYSQL_ROOT_HOST: '%'
     volumes:
       # 修改时区为机器本地时区
       - /usr/share/zoneinfo/Asia/Shanghai:/etc/localtime:ro
       - ./master/my.cnf:/etc/my.cnf:ro
       - ./master/my.cnf.d:/etc/my.cnf.d:ro
-      # - ./master/initdb.d:/docker-entrypoint-initdb.d:ro
-      - ./master/data:/var/lib/mysql
+      - ./master/initdb.d:/docker-entrypoint-initdb.d:ro
+      #- ./master/data:/var/lib/mysql
     networks:
       - default
   mysql-57-slave1:
@@ -27,6 +28,8 @@ services:
     restart: always
     hostname: mysql-57-slave1
     container_name: mysql-57-slave1
+    depends_on:
+      - mysql-57-master
     ports:
       - 13571:3306
     environment:
@@ -34,13 +37,14 @@ services:
       TZ: Asia/Shanghai
       LANG: zh_CN.UTF-8
       MYSQL_ROOT_PASSWORD: MySlave1
+      MYSQL_ROOT_HOST: '%'
     volumes:
       # 修改时区为机器本地时区
       - /usr/share/zoneinfo/Asia/Shanghai:/etc/localtime:ro
       - ./slave1/my.cnf:/etc/my.cnf:ro
       - ./slave1/my.cnf.d:/etc/my.cnf.d:ro
-      # - ./slave1/initdb.d:/docker-entrypoint-initdb.d:ro
-      - ./slave1/data:/var/lib/mysql
+      - ./slave1/initdb.d:/docker-entrypoint-initdb.d:ro
+      #- ./slave1/data:/var/lib/mysql
     networks:
       - default
   mysql-57-slave2:
@@ -48,20 +52,23 @@ services:
     restart: always
     hostname: mysql-57-slave2
     container_name: mysql-57-slave2
+    depends_on:
+      - mysql-57-master
     ports:
       - 13572:3306
     environment:
       # 修改时区为机器本地时区
       TZ: Asia/Shanghai
       LANG: zh_CN.UTF-8
-      MYSQL_ROOT_PASSWORD: MySlave1
+      MYSQL_ROOT_PASSWORD: MySlave2
+      MYSQL_ROOT_HOST: '%'
     volumes:
       # 修改时区为机器本地时区
       - /usr/share/zoneinfo/Asia/Shanghai:/etc/localtime:ro
       - ./slave2/my.cnf:/etc/my.cnf:ro
       - ./slave2/my.cnf.d:/etc/my.cnf.d:ro
-      # - ./slave2/initdb.d:/docker-entrypoint-initdb.d:ro
-      - ./slave2/data:/var/lib/mysql
+      - ./slave2/initdb.d:/docker-entrypoint-initdb.d:ro
+      # - ./slave2/data:/var/lib/mysql
     networks:
       - default
 
