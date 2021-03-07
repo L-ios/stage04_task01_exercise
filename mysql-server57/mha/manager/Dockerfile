@@ -22,7 +22,7 @@ ARG MHA4MYSQL_MANAGER_PACKAGE=mha4mysql-manager-${MHA4MYSQL_VERSION}-0.el7.cento
 # Install server
 RUN yum install -y https://repo.mysql.com/mysql-community-minimal-release-el7.rpm \
         https://repo.mysql.com/mysql-community-release-el7.rpm \
-    && yum-config-manager --enable mysql57-server-minimal \
+    && yum-config-manager --enable mysql57-community \
     && yum install -y \
         $MYSQL_SERVER_PACKAGE \
         $MYSQL_SHELL_PACKAGE \
