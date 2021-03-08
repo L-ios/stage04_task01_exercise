@@ -20,8 +20,7 @@ ARG MHA4MYSQL_VERSION=0.58
 ARG MHA4MYSQL_NODE_PACKAGE=mha4mysql-node-${MHA4MYSQL_VERSION}-0.el7.centos.noarch.rpm
 
 # Install server
-RUN yum install -y https://repo.mysql.com/mysql-community-minimal-release-el7.rpm \
-        https://repo.mysql.com/mysql-community-release-el7.rpm \
+RUN yum install -y https://repo.mysql.com/mysql-community-release-el7.rpm \
     && yum-config-manager --enable mysql57-community \
     && yum-config-manager --disable mysql80-community \
     && yum install -y \
