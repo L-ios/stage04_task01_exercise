@@ -1,8 +1,16 @@
 version: "3.9"
 
 services:
+  mha-manager:
+    image: mha-manager
+    build:
+      context: ./mha/manager
+      dockerfile: Dockerfile
   mysql-57-master:
-    image: mysql/mysql-server:5.7
+    image: mysql-server-57:mha-node
+    build:
+      context: ./mha/node
+      dockerfile: Dockerfile
     restart: always
     hostname: mysql-57-master
     container_name: mysql-57-master
@@ -21,10 +29,11 @@ services:
       - ./master/my.cnf.d:/etc/my.cnf.d:ro
       - ./master/initdb.d:/docker-entrypoint-initdb.d:ro
       #- ./master/data:/var/lib/mysql
-    networks:
-      - default
   mysql-57-slave1:
-    image: mysql/mysql-server:5.7
+    image: mysql-server-57:mha-node
+    build:
+      context: ./mha/node
+      dockerfile: Dockerfile
     restart: always
     hostname: mysql-57-slave1
     container_name: mysql-57-slave1
@@ -45,10 +54,11 @@ services:
       - ./slave1/my.cnf.d:/etc/my.cnf.d:ro
       - ./slave1/initdb.d:/docker-entrypoint-initdb.d:ro
       #- ./slave1/data:/var/lib/mysql
-    networks:
-      - default
   mysql-57-slave2:
-    image: mysql/mysql-server:5.7
+    image: mysql-server-57:mha-node
+    build:
+      context: ./mha/node
+      dockerfile: Dockerfile
     restart: always
     hostname: mysql-57-slave2
     container_name: mysql-57-slave2
@@ -69,10 +79,4 @@ services:
       - ./slave2/my.cnf.d:/etc/my.cnf.d:ro
       - ./slave2/initdb.d:/docker-entrypoint-initdb.d:ro
       # - ./slave2/data:/var/lib/mysql
-    networks:
-      - default
 
-networks:
-  default:
-    external:
-      name: test

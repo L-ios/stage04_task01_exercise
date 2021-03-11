@@ -15,6 +15,13 @@
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301 USA
 set -e
 
+if [[ ! -f "/etc/ssh/ssh_host_rsa_key" ]]; then
+    ssh-keygen -A
+fi
+if [[ ! -f "~/.ssh/id_rsa" ]]; then
+    ssh-keygen -t rsa -N "" -f ~/.ssh/id_rsa
+fi
+
 echo "[Entrypoint] MySQL Docker Image 5.7.33-1.1.19"
 # Fetch value from server config
 # We use mysqld --verbose --help instead of my_print_defaults because the
