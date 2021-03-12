@@ -27,6 +27,7 @@ RUN dnf install -y https://repo.mysql.com/mysql-community-release-el7.rpm \
     && dnf install -y \
         openssh-clients \
         openssh-server \
+        openssl \
         passwd \
         $MYSQL_SERVER_PACKAGE \
         $MYSQL_SHELL_PACKAGE \

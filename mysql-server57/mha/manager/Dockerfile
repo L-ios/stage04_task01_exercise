@@ -7,6 +7,7 @@ ARG MHA4MYSQL_NODE_PACKAGE=mha4mysql-node-${MHA4MYSQL_VERSION}-0.el7.centos.noar
 RUN dnf install -y \
         openssh-clients \
         openssh-server \
+        openssl \
         passwd \
         perl-DBD-MySQL \
         perl-Config-Tiny \
