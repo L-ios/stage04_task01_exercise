@@ -20,7 +20,7 @@ if passwd --status root; then
     echo "${ROOT_PASSWORD}" | passwd --stdin root
 fi
 
-/usr/sbin/sshd -oPermitRootLogin=yes
+/usr/sbin/sshd -oPermitRootLogin=yes -D
 
 if [[ -z "${MHA_MANAGER_CONF}" ]]; then
     MHA_MANAGER_CONF=/etc/mha/manager.conf
@@ -31,4 +31,4 @@ if masterha_check_repl --conf=${MHA_MANAGER_CONF}; then
     exit 1
 fi
 
-masterha_manager --conf=${MHA_MANAGER_CONF} --remove_dead_master_conf --ignore_last_failover
+#masterha_manager --conf=${MHA_MANAGER_CONF} --remove_dead_master_conf --ignore_last_failover

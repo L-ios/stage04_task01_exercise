@@ -13,6 +13,8 @@ services:
       # 修改时区为机器本地时区
       TZ: Asia/Shanghai
       LANG: zh_CN.UTF-8
+      LANGUAGE: zh_CN.UTF-8
+#      LC_ALL: zh_CN.UTF-8
       ROOT_PASSWORD: root4manager
     volumes:
       # 修改时区为机器本地时区
@@ -58,7 +60,7 @@ services:
       # 修改时区为机器本地时区
       TZ: Asia/Shanghai
       LANG: zh_CN.UTF-8
-      ROOT_PASSWORD: root4master
+      ROOT_PASSWORD: root4slave1
       MYSQL_ROOT_PASSWORD: MySlave1
       MYSQL_ROOT_HOST: '%'
     volumes:
@@ -84,7 +86,7 @@ services:
       # 修改时区为机器本地时区
       TZ: Asia/Shanghai
       LANG: zh_CN.UTF-8
-      ROOT_PASSWORD: root4master
+      ROOT_PASSWORD: root4slave
       MYSQL_ROOT_PASSWORD: MySlave2
       MYSQL_ROOT_HOST: '%'
     volumes:

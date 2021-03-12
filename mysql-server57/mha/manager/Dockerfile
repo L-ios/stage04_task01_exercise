@@ -21,5 +21,5 @@ RUN dnf install -y \
 COPY docker-entrypoint.sh /entrypoint.sh
 COPY healthcheck.sh /healthcheck.sh
 ENTRYPOINT ["/entrypoint.sh"]
-HEALTHCHECK CMD /healthcheck.sh
-CMD ["bmysqld"]
+#HEALTHCHECK CMD /healthcheck.sh
+CMD ["masterha_manager"]
