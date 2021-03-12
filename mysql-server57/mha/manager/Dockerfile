@@ -19,5 +19,7 @@ RUN dnf install -y \
     && dnf clean all
 
 COPY docker-entrypoint.sh /entrypoint.sh
+COPY healthcheck.sh /healthcheck.sh
 ENTRYPOINT ["/entrypoint.sh"]
-CMD ["bash" "-c" "'sshd -D'"]
+HEALTHCHECK CMD /healthcheck.sh
+CMD ["bmysqld"]

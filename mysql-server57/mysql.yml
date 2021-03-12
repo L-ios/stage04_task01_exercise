@@ -6,6 +6,11 @@ services:
     build:
       context: ./mha/manager
       dockerfile: Dockerfile
+    restart: always
+    hostname: mysql-mha-manager
+    container_name: mysql-mha-manager
+    environment:
+      ROOT_PASSWORD: root4manager
   mysql-57-master:
     image: mysql-server-57:mha-node
     build:
@@ -21,6 +26,7 @@ services:
       TZ: Asia/Shanghai
       LANG: zh_CN.UTF-8
       MYSQL_ROOT_PASSWORD: MyMaster
+      ROOT_PASSWORD: root4master
       MYSQL_ROOT_HOST: '%'
     volumes:
       # 修改时区为机器本地时区

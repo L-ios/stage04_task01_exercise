@@ -20,18 +20,21 @@ if [[ ! -f "/etc/ssh/ssh_host_rsa_key" ]]; then
     ssh-keygen -A
 fi
 
-echo "ssh-keygen ${USER} id_rsa."
-if [[ ! -f "~/.ssh/id_rsa" ]]; then
-    ssh-keygen -t rsa -N "" -f ~/.ssh/id_rsa
+echo "ssh-keygen root id_rsa."
+if [[ ! -f "/root/.ssh/id_rsa" ]]; then
+    ssh-keygen -q -t rsa -N "$(cat /etc/hostname)" -f /root/.ssh/id_rsa
 fi
 
 echo "reset root password"
-if [[ -z "${ROOT_PASSWORD}" ]]; then
-	ROOT_PASSWORD=$(openssl rand -hex 16)
-    echo "root password not found, random password: ${ROOT_PASSWORD}"
+if passwd --status root; then
+    if [[ -z "${ROOT_PASSWORD}" ]]; then
+        ROOT_PASSWORD=$(openssl rand -hex 16)
+        echo "root password not found, random password: ${ROOT_PASSWORD}"
+    fi
+    echo "${ROOT_PASSWORD}" | passwd --stdin root
 fi
 
-echo "${ROOT_PASSWORD}" | passwd --stdin root
+/usr/sbin/sshd -oPermitRootLogin=yes
 
 echo "[Entrypoint] MySQL Docker Image 5.7.33-1.1.19"
 # Fetch value from server config
