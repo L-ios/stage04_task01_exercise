@@ -22,7 +22,7 @@ fi
 
 echo "ssh-keygen root id_rsa."
 if [[ ! -f "/root/.ssh/id_rsa" ]]; then
-    ssh-keygen -q -t rsa -N "$(cat /etc/hostname)" -f /root/.ssh/id_rsa
+    ssh-keygen -q -t rsa -N "" -f /root/.ssh/id_rsa
 fi
 
 echo "reset root password"

@@ -17,3 +17,20 @@
   - [ ] 切换查看
   - [ ] 查看切换效果
   - [ ] 添加数据，并查看数据
+* 困难
+** 4个节点之间的ssh联通存在问题，需要制作脚本进行联通
+** perl脚本有问题
+   报错如下
+   #+begin_src shell
+     Sun Mar 14 22:45:07 2021 - [error][/usr/share/perl5/vendor_perl/MHA/MasterMonitor.pm, ln427] Error happened on checking configurations. Redundant argument in sprintf at /usr/share/perl5/vendor_perl/MHA/NodeUtil.pm line 201.
+     Sun Mar 14 22:45:07 2021 - [error][/usr/share/perl5/vendor_perl/MHA/MasterMonitor.pm, ln525] Error happened on monitoring servers.
+   #+end_src
+   NodeUtil.pm:201行会报错，需要修改为:
+   #+begin_src perl
+     $str =~ /(\d+)\.(\d+)/;
+     my $strmajor = "$1.$2";
+     my $result = sprintf( '%03d%03d', $strmajor =~ m/(\d+)/g );
+   #+end_src
+** slave 节点为打开 bin log
+   slave节点my.cnf添加bin log 配置
+   且所有的bin log配置需要相同，例如过滤的数据库，需要记录bin log的数据库

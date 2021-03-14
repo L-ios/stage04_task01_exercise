@@ -9,6 +9,8 @@ services:
     restart: always
     hostname: mysql-mha-manager
     container_name: mysql-mha-manager
+    ports:
+      - 13670:3306
     environment:
       # 修改时区为机器本地时区
       TZ: Asia/Shanghai
@@ -20,6 +22,7 @@ services:
       # 修改时区为机器本地时区
       - /usr/share/zoneinfo/Asia/Shanghai:/etc/localtime:ro
       - ./manager/manager.conf:/etc/mha/manager.conf
+      - ./manager/MHA/NodeUtil.pm:/usr/share/perl5/vendor_perl/MHA/NodeUtil.pm
   mysql-57-master:
     image: mysql-server-57:mha-node
     build:
