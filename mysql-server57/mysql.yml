@@ -9,8 +9,6 @@ services:
     restart: always
     hostname: mysql-mha-manager
     container_name: mysql-mha-manager
-    ports:
-      - 13670:3306
     environment:
       # 修改时区为机器本地时区
       TZ: Asia/Shanghai
