@@ -4,6 +4,13 @@ set -ex
 
 DOCKER_COMPOSE_FILE=mysql.yml
 
+if ! docker-compose -f ${DOCKER_COMPOSE_FILE} up -d; then
+    echo "docker compose start container error!"
+    exit 1
+fi
+echo "sleep 10, to wait ssh-keygen"
+sleep 10
+
 # 查找所有的container
 SERVERS=$(docker-compose -f ${DOCKER_COMPOSE_FILE} ps --services)
 CONTAINERS=()
@@ -18,6 +25,7 @@ AUTHORIZED_KEYS=$(basename ${C_AUTHORIZED_KEYS})
 # 生产连接文件
 cp /dev/null ${AUTHORIZED_KEYS}
 for container in ${CONTAINERS[@]}; do
+    # todo 寻找检测点，后删除上面的sleep
     docker exec -it ${container} cat /root/.ssh/id_rsa.pub >> ${AUTHORIZED_KEYS}
 done
 

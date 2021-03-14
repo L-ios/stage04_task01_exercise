@@ -1,24 +1,54 @@
 * 环境讲解
   采用docker进行构建，包含如下4个服务
-  - 1个master
-  - 2个slave
-  - 1个MHA
-* init.sql 流程 [4/4]
-  - [X] 启用 插件
-  - [X] 修改参数
-  - [X] 服务连接
-  - [X] slave start
-* mha 添加 [0/8]
-  - [ ] slave node
-  - [ ] manage node
-  - [ ] 建库，建表
-  - [ ] log 查看
-  - [ ] 主机故障
-  - [ ] 切换查看
-  - [ ] 查看切换效果
-  - [ ] 添加数据，并查看数据
-* 困难
-** 4个节点之间的ssh联通存在问题，需要制作脚本进行联通
+  | 服务名          | hostname/容器名   | root密码     | mysql密码 | 3306映射的外部端口 |
+  |-----------------+-------------------+--------------+-----------+--------------------|
+  | mha-manager     | mysql-mha-manager | root4manager |           |                    |
+  | mysql-57-master | mysql-57-master   | root4master  | MyMaster  |              13570 |
+  | mysql-57-slave1 | mysql-57-slave1   | root4slave1  | MySlave1  |              13571 |
+  | mysql-57-slave2 | mysql-57-slave2   | root4slave2  | MySlave2  |              13572 |
+
+  各个节点之间通信全采用hostname查找的方式，配置中不指定IP
+* 部署运行流程
+  直接运行start.sh
+  start.sh会做如下工作
+  - 编译服务需要的镜像
+  - 启动容器
+  - sleep 10s
+  - 收集各个容器的ssh ~/root/.ssh/id_rsa.pub~ 收集并生成 ~authorized_keys~ 文件
+  - 将生成的 ~authorized_keys~ 文件拷贝到各个容器中，并修改所属者
+** mha-manager介绍
+   主要配置为 [[file:mysql-server57/manager/manager.conf][mha config file]]
+   需要注意 ~password~ 是数据库密码， ~repl_password~ 是linux下的用户密码，可以理解为ssh密码
+*** 镜像构建
+    参考 [[file:mysql-server57/mha/manager/Dockerfile][manager Dockerfile]] 中的内容
+** mysql-57-master
+   通过 [[file:mysql-server57/master/my.cnf][my.cnf]] 加载semi插件，并开启配置
+   #+begin_src conf
+     # 加载semi master插件
+     plugin-load-add=semisync_master.so
+     rpl_semi_sync_master_enabled=1
+     rpl_semi_sync_master_timeout=1000
+   #+end_src
+** mysql-57-slave1 & mysql-57-slave2
+   除 ~server-id~ 两者的配置几乎相同，
+   - 在 [[file:mysql-server57/slave1/my.cnf][slave1 my.cnf]] [[file:mysql-server57/slave2/my.cnf][slave2 my.cnf]]中开启semi插件
+     #+begin_src conf
+       # 加载semi slave插件
+       plugin-load-add=semisync_slave.so
+       rpl_semi_sync_slave_enabled=1
+     #+end_src
+   - 配置初始化脚本，进行master的连接
+     [[file:mysql-server57/slave1/initdb.d/init.sql][slave1 init.sql]] 和 [[file:mysql-server57/slave2/initdb.d/init.sql][slave2 init.sql]]
+     #+begin_src sql
+       change master to master_host='mysql-57-master',
+                        master_user='root',
+                        master_password='MyMaster',
+                        master_log_file='mysql-bin.000001';
+       start slave;
+     #+end_src
+
+* 需要注意的点
+
 ** perl脚本有问题
    报错如下
    #+begin_src shell
@@ -31,6 +61,6 @@
      my $strmajor = "$1.$2";
      my $result = sprintf( '%03d%03d', $strmajor =~ m/(\d+)/g );
    #+end_src
-** slave 节点为打开 bin log
+** 所有节点均需要打开 bin log
    slave节点my.cnf添加bin log 配置
    且所有的bin log配置需要相同，例如过滤的数据库，需要记录bin log的数据库
